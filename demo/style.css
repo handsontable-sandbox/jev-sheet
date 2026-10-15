@@ -1,0 +1,542 @@
+/* JevSheet in the Handsontable v3 design system (handsontable-sandbox/handsontable-com-v3,
+   DESIGN.md and /playground). The demo runs on demos.handsontable.com, where the site's
+   stylesheet is not loaded, so the tokens it uses are restated here with the site's values.
+   Every colour, size and space below reads a token; only this block holds literals.
+   The licensed Aeonik and Exposure webfonts are not served to the sandbox, so the stacks fall
+   back the way the site's own sandbox demos do. */
+:root {
+  color-scheme: light;
+
+  /* Type (global.scss). Headings are fixed here: the site's fluid curves are Sass functions. */
+  --font-sans: 'Aeonik', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Exposure', ui-serif, georgia, 'Times New Roman', serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+  --text-h3: 36px;
+  --leading-h3: 44px;
+  --text-h6: 20px;
+  --leading-h6: 28px;
+  --text-body: 16px;
+  --leading-body: 24px;
+  --text-body-2: 14px;
+  --leading-body-2: 20px;
+  --text-caption: 12px;
+  --leading-caption: 16px;
+  --tracking-headline: -0.5px;
+  --tracking-body: 0.3px;
+  --tracking-small: 0.5px;
+
+  /* Space and controls (8px grid, 4px sub-unit). */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --control-l: 48px;
+  --control-m: 40px;
+  --control-s: 32px;
+  --icon-s: 16px;
+  --content-max: 72rem;
+  --measure: 40rem;
+  --transition-base: 0.2s ease-in-out;
+
+  /* Palette (global.scss, Figma "Colours"). */
+  --color-blue-50: #d8e6fd;
+  --color-blue-500: #1a42e8;
+  --color-gray-50: #f7f7f9;
+  --color-gray-100: #e6e6e6;
+  --color-gray-200: #ccc;
+  --color-gray-500: #808080;
+  --color-gray-600: #666;
+  --color-gray-700: #4d4d4d;
+  --color-gray-800: #333;
+  --color-gray-950: #141414;
+  --color-green-700: #435535;
+  --color-brand-blue: var(--color-blue-500);
+  --color-brand-white: #fff;
+  --color-brand-black: #000;
+  --color-success-bg: #e6f7ec;
+  --color-warning-bg: #fdf3e1;
+  --color-warning-text: #8a5200;
+  --color-error-bg: #fdecec;
+  --color-error-text: #c1272d;
+  /* The review red the site's AI demo uses for text on the error tint (5.6:1). */
+  --color-review: rgb(180 35 40);
+
+  /* Light surface (_theme.scss surface-light). */
+  --surface: var(--color-brand-white);
+  --surface-raised: var(--color-gray-50);
+  --ink: var(--color-gray-800);
+  --ink-strong: var(--color-gray-950);
+  --ink-muted: var(--color-gray-600);
+  --rule: var(--color-gray-100);
+  --accent: var(--color-brand-blue);
+  --focus-ring: var(--color-brand-blue);
+}
+
+/* --- page --------------------------------------------------------------- */
+
+* { box-sizing: border-box; }
+
+body {
+  max-width: calc(var(--content-max) + 2 * var(--space-6));
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-6) var(--space-12);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+}
+
+@media (width < 640px) {
+  :root {
+    /* The h3 phone floor (global.scss fluid-knee(22px, 27px, 36px) at 320). */
+    --text-h3: 28px;
+    --leading-h3: 36px;
+  }
+
+  body { padding-inline: var(--space-4); }
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+a { color: inherit; }
+
+/* --- header: the Headline (serif lead, framed sans emphasis) ------------- */
+
+.headline {
+  margin: 0 0 var(--space-2);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: var(--text-h3);
+  font-weight: 400;
+  line-height: var(--leading-h3);
+  letter-spacing: var(--tracking-headline);
+}
+
+/* The `selection` variant: the emphasis in a 1px brand-blue frame, the way a grid shows a
+   selected cell. */
+.headline .emphasis {
+  display: inline-block;
+  margin-right: var(--space-2);
+  padding: 0 var(--space-2) var(--space-1);
+  border: 1px solid var(--color-brand-blue);
+  font-family: var(--font-sans);
+  font-weight: 500;
+}
+
+.by {
+  margin: 0 0 var(--space-4);
+  color: var(--ink-muted);
+  font-size: var(--text-body-2);
+  line-height: var(--leading-body-2);
+  letter-spacing: var(--tracking-small);
+}
+
+/* A link in running text: black with a gray rule under it; hover darkens the rule to the
+   accent, so it is never colour alone. */
+.by a,
+footer p a {
+  color: var(--ink-strong);
+  text-decoration: underline;
+  text-decoration-color: var(--color-gray-200);
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--transition-base);
+}
+
+.by a:hover,
+footer p a:hover {
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+
+.lede {
+  max-width: var(--measure);
+  margin: 0 0 var(--space-6);
+  color: var(--ink-muted);
+}
+
+/* --- section headings: sans medium behind the brand square --------------- */
+
+h2 {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  margin: var(--space-10) 0 var(--space-3);
+  color: var(--ink-strong);
+  font-size: var(--text-h6);
+  font-weight: 500;
+  line-height: var(--leading-h6);
+  letter-spacing: 0;
+}
+
+h2::before {
+  content: '';
+  flex-shrink: 0;
+  width: var(--space-2);
+  height: var(--space-2);
+  background: var(--color-brand-blue);
+}
+
+/* Unordered lists use filled squares. */
+ul.hint {
+  max-width: var(--measure);
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+  color: var(--ink);
+  font-size: var(--text-body-2);
+  line-height: var(--leading-body-2);
+  letter-spacing: var(--tracking-small);
+}
+
+ul.hint li {
+  position: relative;
+  margin: var(--space-1) 0;
+  padding-left: var(--space-4);
+}
+
+ul.hint li::before {
+  content: '';
+  position: absolute;
+  top: var(--space-2);
+  left: 0;
+  width: var(--space-1);
+  height: var(--space-1);
+  background: var(--ink);
+}
+
+ul.hint strong { color: var(--ink-strong); font-weight: 500; }
+
+/* --- buttons: the DS Button anatomy (dot that opens on hover) ------------ */
+
+.toolbar,
+.subbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  align-items: center;
+  margin: 0 0 var(--space-2);
+}
+
+.btn {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 20px;
+  align-items: center;
+  height: var(--control-m);
+  padding: 0 30px 1px 20px;
+  border: 0;
+  border-top: 1px solid var(--rule);
+  background: transparent;
+  color: var(--color-brand-black);
+  font: inherit;
+  font-size: var(--text-body);
+  line-height: var(--leading-body-2);
+  letter-spacing: var(--tracking-body);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    gap var(--transition-base),
+    padding var(--transition-base),
+    background-color var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.btn .dot {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--space-2);
+  height: var(--space-2);
+  overflow: hidden;
+  background: currentColor;
+  transition:
+    width var(--transition-base),
+    height var(--transition-base),
+    background-color var(--transition-base);
+}
+
+/* The arrow slides into the opened square. */
+.btn .dot svg {
+  width: var(--icon-s);
+  height: var(--icon-s);
+  opacity: 0;
+  transform: translateX(-24px);
+  transition:
+    opacity var(--transition-base),
+    transform var(--transition-base);
+}
+
+.btn:is(:hover, :focus-visible) {
+  gap: 14px;
+  padding-inline: 6px 20px;
+  border-top-color: transparent;
+  background: color-mix(in srgb, var(--color-brand-black) 5%, transparent);
+}
+
+.btn:is(:hover, :focus-visible) .dot {
+  width: var(--space-6);
+  height: var(--space-6);
+  background: color-mix(in srgb, var(--color-brand-black) 10%, transparent);
+}
+
+.btn:is(:hover, :focus-visible) .dot svg {
+  opacity: 1;
+  transform: none;
+}
+
+/* Primary, the .datagrid surface's blue: it keeps its colour on hover. */
+.btn.primary {
+  border-top-color: transparent;
+  background: var(--color-brand-blue);
+  color: var(--color-brand-white);
+}
+
+.btn.primary:is(:hover, :focus-visible) {
+  background: color-mix(in srgb, var(--color-brand-white) 10%, var(--color-brand-blue));
+}
+
+.btn.primary:is(:hover, :focus-visible) .dot {
+  background: color-mix(in srgb, var(--color-brand-white) 20%, transparent);
+}
+
+/* Size S: the controls in the grid's top bar. */
+.btn.s {
+  gap: 12px;
+  height: var(--control-s);
+  padding: 0 20px 1px 12px;
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
+}
+
+.btn.s .dot { width: var(--space-1); height: var(--space-1); }
+.btn.s:is(:hover, :focus-visible) { gap: var(--space-2); padding-inline: 4px 12px; }
+.btn.s:is(:hover, :focus-visible) .dot { width: var(--space-6); height: var(--space-6); }
+
+.btn[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn .dot,
+  .btn .dot svg { transition: none; }
+}
+
+/* --- recorded preview: the Hint ------------------------------------------ */
+
+.preview-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  align-items: center;
+  margin: 0 0 var(--space-6);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--accent);
+  background: var(--surface-raised);
+  color: var(--ink);
+  font-size: var(--text-body-2);
+  line-height: var(--leading-body-2);
+}
+
+.preview-note p { flex: 1 1 24rem; margin: 0; }
+.preview-note[hidden] { display: none; }
+/* The upload controls; the column builder's Suggest button sits in .subbar and stays. */
+body.recorded .toolbar { display: none; }
+
+/* --- the grids ------------------------------------------------------------ */
+
+#config-grid,
+#data-grid {
+  /* Handsontable brings its own z-indexes (8–180); this keeps them inside the box. */
+  isolation: isolate;
+  width: 100%;
+}
+
+/* Column headers read from the left, as on the site's grids (ht-theme-site.scss); a header
+   over a right-aligned column follows it. */
+[class*='ht-theme-site'] thead th { text-align: left; }
+[class*='ht-theme-site'] thead .htRight { text-align: right; }
+
+/* Handsontable centres the label with auto side margins; text-align alone cannot move it.
+   The theme class plus .handsontable outranks the core styles the engine injects after this
+   file. */
+[class*='ht-theme-site'].handsontable thead th .relative > .colHeader,
+[class*='ht-theme-site'] .handsontable thead th .relative > .colHeader { margin-inline: 0 auto; }
+[class*='ht-theme-site'].handsontable thead th .relative.htRight > .colHeader,
+[class*='ht-theme-site'] .handsontable thead th .relative.htRight > .colHeader,
+[class*='ht-theme-site'].handsontable thead th .htRight .colHeader,
+[class*='ht-theme-site'] .handsontable thead th .htRight .colHeader { margin-inline: auto 0; }
+[class*='ht-theme-site'].handsontable thead th .htLeft .colHeader,
+[class*='ht-theme-site'] .handsontable thead th .htLeft .colHeader { margin-inline: 0 auto; }
+[class*='ht-theme-site'] thead .htLeft { text-align: left; }
+
+/* Layout-slot content above and below the data grid. */
+.ht-slot-element.slot-status,
+.ht-slot-element.slot-count {
+  padding: var(--space-2) var(--space-3);
+  color: var(--ink-muted);
+  font-family: var(--font-sans);
+  font-size: var(--text-body-2);
+  line-height: var(--leading-body-2);
+  letter-spacing: var(--tracking-small);
+}
+
+.ht-slot-element.slot-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.ht-slot-element.slot-count { text-align: right; }
+.slot-status .spacer { flex: 1; }
+
+/* Add and remove: square icon buttons on the 24px floor. */
+.add-cell { text-align: center !important; cursor: default; }
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  border: 1px solid var(--color-gray-200);
+  color: var(--color-gray-500);
+  vertical-align: middle;
+  user-select: none;
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base);
+}
+
+.icon-btn svg { width: var(--icon-s); height: var(--icon-s); }
+
+.icon-btn.ready {
+  border-color: var(--color-brand-blue);
+  background: var(--color-brand-blue);
+  color: var(--color-brand-white);
+  cursor: pointer;
+}
+
+.icon-btn.remove {
+  border-color: var(--rule);
+  color: var(--color-error-text);
+  cursor: pointer;
+}
+
+.icon-btn.remove:hover { border-color: var(--color-error-text); background: var(--color-error-bg); }
+.icon-btn.disabled { opacity: 0.4; cursor: default; }
+
+/* The empty answer/confidence pair shown until the first Jev column is added. */
+.handsontable tbody td.placeholder { background: var(--surface-raised); }
+
+/* Waiting for Jev: the word itself fades in and out. */
+.thinking {
+  color: var(--ink-muted);
+  font-style: italic;
+  animation: thinking 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes thinking { to { opacity: 0.35; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .thinking { animation: none; }
+}
+
+.failed {
+  color: var(--color-error-text);
+  font-weight: 500;
+}
+
+/* Confidence: a small figure on its band's colour. The figure says it, so it is never colour
+   alone. */
+.badge {
+  display: inline-block;
+  padding: 0 var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  line-height: var(--leading-caption);
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.badge.high { background: var(--color-success-bg); color: var(--color-green-700); }
+.badge.mid { background: var(--color-warning-bg); color: var(--color-warning-text); }
+.badge.low { background: var(--color-error-bg); color: var(--color-review); }
+
+/* An answer below the line asks for a person: a 3px edge in the review red. */
+.handsontable tbody td.review { box-shadow: inset 3px 0 0 var(--color-review); }
+
+/* Nested headers: a blank group cell above a source column gets no menu button. */
+#data-grid thead th .relative:has(> .colHeader:empty) > .changeType,
+#data-grid thead th .relative:has(> .colHeader .hide-col) > .changeType { display: none; }
+
+/* Hide, in the group header above each source column: a quiet text control that grows a
+   tint on hover. */
+#data-grid .hide-col {
+  height: var(--space-6);
+  padding: 0 var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-small);
+  text-decoration: underline;
+  text-decoration-color: var(--color-gray-200);
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+}
+
+#data-grid .hide-col:hover {
+  background: color-mix(in srgb, var(--color-brand-black) 5%, transparent);
+  color: var(--ink-strong);
+}
+
+/* --- footer --------------------------------------------------------------- */
+
+footer {
+  margin-top: var(--space-6);
+}
+
+footer p {
+  max-width: var(--measure);
+  margin: 0 0 var(--space-1);
+  color: var(--ink-muted);
+  font-size: var(--text-body-2);
+  line-height: var(--leading-body-2);
+  letter-spacing: var(--tracking-small);
+}
+
+footer p[hidden] { display: none; }
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  align-items: center;
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--rule);
+}
+
+.cta-lead {
+  margin-right: var(--space-2);
+  color: var(--ink-strong);
+  font-family: var(--font-serif);
+  font-size: var(--text-h6);
+  line-height: var(--leading-h6);
+}

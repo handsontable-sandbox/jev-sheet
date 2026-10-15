@@ -1,0 +1,13 @@
+node_modules/
+.env*
+.dev.vars*
+.wrangler/
+!.env.example
+.DS_Store
+demo/node_modules/
+demo/dist/
+
+# Local-only: planning notes, blog drafts, editor and preview config
+notes/
+blog/
+.claude/

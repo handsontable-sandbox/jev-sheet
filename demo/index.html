@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="light">
+  <title>JevSheet: Spreadsheet Enricher · AI-classified columns in Handsontable</title>
+  <meta name="description" content="Turn any spreadsheet into an AI-classified dataset in the browser. Upload a CSV or Excel file, describe a column in plain English, and Handsontable fills it in row by row with a calibrated confidence.">
+
+  <!-- Share previews (Slack, LinkedIn, X, Bluesky). og.png is a 1200x630 capture of the filled grid. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Handsontable">
+  <meta property="og:title" content="JevSheet: AI-classified columns in Handsontable">
+  <meta property="og:description" content="Upload a CSV, describe a column in plain English, and watch the grid fill in row by row with a confidence for every answer. Nothing is stored.">
+  <meta property="og:url" content="https://demos.handsontable.com/d/2g6f4hc3b2/">
+  <meta property="og:image" content="https://jev-sheet.handsontable-sandbox.workers.dev/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@handsontable">
+  <meta name="twitter:title" content="JevSheet: AI-classified columns in Handsontable">
+  <meta name="twitter:description" content="Upload a CSV, describe a column in plain English, and watch the grid fill in row by row with a confidence for every answer. Nothing is stored.">
+  <meta name="twitter:image" content="https://jev-sheet.handsontable-sandbox.workers.dev/og.png">
+</head>
+<body>
+  <header>
+    <h1 class="headline"><span class="emphasis">JevSheet</span>Spreadsheet Enricher</h1>
+    <p class="by">
+      Built with <a href="https://handsontable.com/?utm_source=jev-sheet&utm_medium=referral&utm_campaign=ai-columns-jev&utm_content=header" target="_blank" rel="noopener">Handsontable</a>,
+      classified by <a href="https://typesafe.ai/" target="_blank" rel="noopener">Jev</a>
+    </p>
+    <p class="lede">Turn any spreadsheet into an AI-classified dataset without leaving the browser. Upload a CSV or Excel file, describe a new column in plain English, and the grid fills it in row by row, with a calibrated confidence for every answer.</p>
+  </header>
+
+  <div id="preview-note" class="preview-note" hidden>
+    <p>This preview replays recorded answers for 30 sample reviews. Open the live demo to classify your own CSV or Excel file.</p>
+    <a id="full-demo" class="btn primary" href="https://demos.handsontable.com/" target="_blank" rel="noopener"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 18l6-6"/><path d="M13 6l6 6"/></svg></span><span>Open the live demo</span></a>
+  </div>
+
+  <section class="toolbar">
+    <label class="btn">
+      <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 9l5-5l5 5"/><path d="M12 4v12"/></svg></span><span>Upload CSV or Excel</span>
+      <input id="data-file" type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+    </label>
+    <button id="load-sample" class="btn" type="button"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 18l6-6"/><path d="M13 6l6 6"/></svg></span><span>Load sample data</span></button>
+    <!-- Export buttons are moved by index.js into the data grid's top layout slot. -->
+    <button id="export-csv" class="btn s" type="button"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 11l5 5l5-5"/><path d="M12 4v12"/></svg></span><span>Export CSV</span></button>
+    <button id="export-xlsx" class="btn s" type="button"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 11l5 5l5-5"/><path d="M12 4v12"/></svg></span><span>Export Excel</span></button>
+  </section>
+
+  <!-- Hidden until a file or the sample data is loaded (see loadRows in index.js). -->
+  <section id="define" hidden>
+    <h2>Define a column</h2>
+    <ul class="hint">
+      <li><strong>Noul</strong>: a yes/no question. The value is the probability of yes, 0 to 1.</li>
+      <li><strong>Score</strong>: ordered levels, low to high, in Options (for example <em>Very negative, Mixed, Very positive</em>).</li>
+      <li><strong>Choice</strong>: one of two or more comma-separated options.</li>
+    </ul>
+    <div class="subbar"><button id="suggest" class="btn" type="button" hidden><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 18l6-6"/><path d="M13 6l6 6"/></svg></span><span>Suggest a column</span></button></div>
+    <div id="config-grid"></div>
+  </section>
+
+  <section>
+    <h2>Your data</h2>
+    <div id="data-grid"></div>
+  </section>
+
+  <footer>
+    <p id="privacy">Your rows leave the browser only to be classified by Jev. Rows are not logged or stored on Handsontable servers. Max <span id="max-rows"></span> rows.</p>
+    <p id="hide-hint">Hide columns to send only the needed data.</p>
+    <nav class="cta" aria-label="Learn more">
+      <span class="cta-lead">Want this in your own app?</span>
+      <a class="btn" href="https://handsontable.com/docs/javascript-data-grid/recipes/real-time/ai-columns-jev/?utm_source=jev-sheet&utm_medium=referral&utm_campaign=ai-columns-jev&utm_content=footer" target="_blank" rel="noopener"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 18l6-6"/><path d="M13 6l6 6"/></svg></span><span>How it's built</span></a>
+      <a class="btn primary" href="https://handsontable.com/pricing?utm_source=jev-sheet&utm_medium=referral&utm_campaign=ai-columns-jev&utm_content=footer" target="_blank" rel="noopener"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 18l6-6"/><path d="M13 6l6 6"/></svg></span><span>Get Handsontable</span></a>
+      <!-- Add a "Source" link here once the repo is public. -->
+    </nav>
+  </footer>
+  <script type="module" src="/index.js"></script>
+</body>
+</html>

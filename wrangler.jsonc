@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "jev-sheet",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-07-29",
+  // handsontable-sandbox PoC account — pinned so the Worker can't land elsewhere
+  "account_id": "e17e41cc82bda15dfa63960aa172fb87",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // Only og.png is served from here; the Worker runs first so it can redirect everything else
+    "run_worker_first": true
+  },
+  // No Workers Logs: nothing about a request is captured server-side
+  "observability": { "enabled": false },
+  // Per-caller rate limit for /api/classify: a 50-row column is 50 requests in a burst, so 300 a
+  // minute allows a few columns per minute and still blocks a scripted loop. Period must be 10 or 60.
+  "ratelimits": [
+    { "name": "RATE_LIMITER", "namespace_id": "1001", "simple": { "limit": 300, "period": 60 } }
+  ],
+  // ALLOWED_ORIGINS: pages on these origins may call /api/classify besides this Worker's own
+  // (comma-separated). demos.handsontable.com serves the published demo; local dev adds its Vite
+  // origin with `--var` (see "Run it yourself" in the README), never here.
+  // DEMO_URL: where every non-API path redirects. The demo's live page on the demo runner.
+  "vars": {
+    "ALLOWED_ORIGINS": "https://demos.handsontable.com",
+    "DEMO_URL": "https://demos.handsontable.com/d/2g6f4hc3b2/"
+  },
+  // Names only. Pushed from the git-ignored .env with `npx wrangler deploy --secrets-file .env`
+  "secrets": { "required": ["JEV_API_KEY"] }
+}
